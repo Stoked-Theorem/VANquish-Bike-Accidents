@@ -170,8 +170,9 @@
       var service = null;
       var gmarkers = [];
       var boxes = null;
+      var map;
       function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
+         map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
           zoom: 13,
           center: {lat: 49.249660, lng: -123.119340}
@@ -226,9 +227,9 @@
         var originInput = document.getElementById('origin-input');
         var destinationInput = document.getElementById('destination-input');
         var modeSelector = document.getElementById('mode-selector');
-        this.directionsService = new google.maps.DirectionsService;
-        this.directionsDisplay = new google.maps.DirectionsRenderer;
-        this.directionsDisplay.setMap(map);
+        this.directionsService = new google.maps.DirectionsService();
+        // this.directionsDisplay = new google.maps.DirectionsRenderer();
+        // this.directionsDisplay.setMap(map);
 
         var originAutocomplete = new google.maps.places.Autocomplete(
             originInput, {placeIdOnly: true});
@@ -288,45 +289,32 @@
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
           destination: {'placeId': this.destinationPlaceId},
-          travelMode: this.travelMode
+          travelMode: this.travelMode,
+          provideRouteAlternatives: true
+
         }, function(response, status) {
           if (status === 'OK') {
-              me.directionsDisplay.setDirections(response);
-              var distance = 0.5;
-              var path = response.routes[0].overview_path;
-              var boxes = routeBoxer.box(path, distance);
-              // for (var i = 0; i < boxes.length; i++) {
-              //         var bounds = box[i];
-              //         // Perform search over this bounds
-              //       }
-              drawBoxes(boxes);
-              findPlaces(0);
+             for (var i = 0; i < response.routes.length; i++) {
+              new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: i
+                });
+             }
+
+              
+      
+         
           } else {
             window.alert('Directions request failed due to ' + status);
           }
-          for (var i = 0; i < boxes.length; i++) {
-              var bounds = box[i];
-              // Perform search over this bounds 
-            }
+        
 
         });
+        //me.directionsDisplay.setMap(map);
       };
 
-      // Draw the array of boxes as polylines on the map
-        function drawBoxes() {
-          boxpolys = new Array(boxes.length);
-          for (var i = 0; i < boxes.length; i++) {
-            console.log(i);
-            boxpolys[i] = new google.maps.Rectangle({
-              bounds: boxes[i],
-              fillOpacity: 0,
-              strokeOpacity: 1.0,
-              strokeColor: '#000000',
-              strokeWeight: 1,
-              map: map
-            });
-          }
-        }
+      
 
     // Clear boxes currently on the map
     function clearBoxes() {
