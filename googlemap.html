@@ -11588,18 +11588,50 @@
     "MoIntersection": 0
   }
 ]
+</script>
+<script>
 // Initialize and add the map
 function initMap() {
+
+  // Custom marks
+	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+	var icons = {
+	parking: {
+		icon: iconBase + 'parking_lot_maps.png'
+	},
+	library: {
+		icon: iconBase + 'library_maps.png'
+	},
+	info: {
+		icon: iconBase + 'info-i_maps.png'
+	}
+	};
+
   var map = new google.maps.Map(
       document.getElementById('map'), {zoom: 13, center: {lat: 49.249660, lng: -123.119340}});
 
   
-
   for(i=0; i<my_marks.length; i++){
   	my_mark = my_marks[i]
     place_lat_lng = {lat: my_mark["Latitude"], lng: my_mark["Longitude"]};
-	var marker = new google.maps.Marker({position: place_lat_lng, map: map});
+	// Choose icon
+	if(my_mark["Injury Type"]=="Minor"){
+		my_icon = icons["info"].icon
+	}else{
+		my_icon = icons["library"].icon
+	}
+	containtString = "<div>"+ JSON.stringify(my_mark) + "</div>"
+	var marker = new google.maps.Marker({position: place_lat_lng, map: map, icon: my_icon, info: containtString});
+	// Window
+	contentString = "<div>"+ my_mark +"</div>"
+	
+	marker.addListener('click', function() {
+		var infowindow = new google.maps.InfoWindow({
+		  content: this.info
+		});
 
+		infowindow.open(map, this);
+	});
   }
 }
     </script>
