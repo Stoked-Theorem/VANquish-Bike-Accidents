@@ -10876,21 +10876,24 @@
                     routeIndex: i
                 });
              }
-
-            // TODO: Construct the polylines for each route
-             // var paths[];
-             // var polylines[];
-             // for (int i = 0; i < response.routes.length && i < 3; i++) {
-             //     new google.maps.DirectionsRenderer({
-             //         map: map,
-             //         directions: response,
-             //         routeIndex: i
-             //     });
-             //     // paths[i] = result.routes[i].overview_path;
-             //     // polyline[i] = new google.maps.Polyline({
-             //     //   path: paths[i]
-             //     // });
-             // }
+             // TODO: Construct the polylines for each route
+             var paths = new Array(response.routes.length);
+             var polylines = new Array(response.routes.length);
+             for (var i = 0; i < response.routes.length; i++) {
+                 paths[i] = response.routes[i].overview_path;
+                 polylines[i] = new google.maps.Polyline({
+                   path: paths[i]
+                 });
+                 for (var x = 0; x < my_marks.length; x++) {
+                     var lat = my_marks[x]["Latitude"]; // marker[0].lat
+                     var lon = my_marks[x]["Longitude"]; // marker[0].lng
+                     // console.log(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(lat, lon), polylines[i]));
+                     console.log(google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(lat, lon), polylines[i], 5*10e-5));
+                     if (!google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(lat, lon), polylines[i], 5*10e-5)) {
+                         //alert("Relocate!"); // TODO: DO SOMETHING
+                     }
+                }
+            }
              // // var path = result.routes[0].overview_path;
 
 
@@ -10898,16 +10901,7 @@
           } else {
             window.alert('Directions request failed due to ' + status);
           }
-        // TODO: get a list of markers with location fields.
-        // TODO: Then use this loop to detect and do something if a marker is near the route
-        // for (int i = 0; i < 3; i++) {
-        //     var float1 = 49.257947; // marker[0].lat
-        //     var float2 = -123.190432; // marker[0].lng
-        //     // console.log(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(float1, float2), bounds));
-        //     if (google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(float1, float2), polyline[i], 10e0)) {
-        //           //alert("Relocate!"); // TODO: DO SOMETHING
-        //       }
-        // }
+
         });
         //me.directionsDisplay.setMap(map); // Remove
       };
