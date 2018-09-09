@@ -169,10 +169,10 @@
       var distance = null; // km
       var service = null;
       var gmarkers = [];
-      // var boxes = null;
-      var map = null;
+      var boxes = null;
+      var map;
       function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
+         map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
           zoom: 13,
           center: {lat: 49.249660, lng: -123.119340}
@@ -226,8 +226,8 @@
         var originInput = document.getElementById('origin-input');
         var destinationInput = document.getElementById('destination-input');
         var modeSelector = document.getElementById('mode-selector');
-        this.directionsService = new google.maps.DirectionsService;
-        // this.directionsDisplay = new google.maps.DirectionsRenderer;
+        this.directionsService = new google.maps.DirectionsService();
+        // this.directionsDisplay = new google.maps.DirectionsRenderer();
         // this.directionsDisplay.setMap(map);
 
         var originAutocomplete = new google.maps.places.Autocomplete(
@@ -288,39 +288,48 @@
           destination: {'placeId': this.destinationPlaceId},
           travelMode: this.travelMode,
           provideRouteAlternatives: true
+
         }, function(response, status) {
           if (status === 'OK') {
-              // this.directionsDisplay.setDirections(response);
-              var paths[];
-              var polylines[];
-              for (int i = 0; i < response.routes.length && i < 3; i++) {
-                  new google.maps.DirectionsRenderer({
-                      map: map,
-                      directions: response,
-                      routeIndex: i
-                  });
-                  // paths[i] = result.routes[i].overview_path;
-                  // polyline[i] = new google.maps.Polyline({
-                  //   path: paths[i]
-                  // });
-              }
-              // var path = result.routes[0].overview_path;
+             for (var i = 0; i < response.routes.length; i++) {
+              new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: i
+                });
+             }
+             // var paths[];
+             // var polylines[];
+             // for (int i = 0; i < response.routes.length && i < 3; i++) {
+             //     new google.maps.DirectionsRenderer({
+             //         map: map,
+             //         directions: response,
+             //         routeIndex: i
+             //     });
+             //     // paths[i] = result.routes[i].overview_path;
+             //     // polyline[i] = new google.maps.Polyline({
+             //     //   path: paths[i]
+             //     // });
+             // }
+             // // var path = result.routes[0].overview_path;
+
+
 
           } else {
             window.alert('Directions request failed due to ' + status);
           }
-          // get a list of parkers with location fields.
-          // for (int i = 0; i < 3; i++) {
-          //     var float1 = 49.257947; // marker[0].lat
-          //     var float2 = -123.190432; // marker[0].lng
-          //     // console.log(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(float1, float2), bounds));
-          //     if (google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(float1, float2), polyline[i], 10e0)) {
-          //           //alert("Relocate!");
-          //       }
-          // }
 
-
+        // get a list of parkers with location fields.
+        // for (int i = 0; i < 3; i++) {
+        //     var float1 = 49.257947; // marker[0].lat
+        //     var float2 = -123.190432; // marker[0].lng
+        //     // console.log(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(float1, float2), bounds));
+        //     if (google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(float1, float2), polyline[i], 10e0)) {
+        //           //alert("Relocate!");
+        //       }
+        // }
         });
+        //me.directionsDisplay.setMap(map);
       };
 
     </script>
