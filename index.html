@@ -176,8 +176,8 @@
           zoom: 13,
           center: {lat: 49.249660, lng: -123.119340}
         });
-        routeBoxer = new RouteBoxer();
-        infoWindow = new google.maps.InfoWindow;
+              infoWindow = new google.maps.InfoWindow;
+              routeBoxer = new RouteBoxer();
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -283,6 +283,7 @@
           return;
         }
         var me = this;
+        clearBoxes();
 
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
@@ -290,20 +291,52 @@
           travelMode: this.travelMode
         }, function(response, status) {
           if (status === 'OK') {
-            me.directionsDisplay.setDirections(response);
-             var path = result.routes[0].overview_path;
+              me.directionsDisplay.setDirections(response);
+              var distance = 0.5;
+              var path = response.routes[0].overview_path;
               var boxes = routeBoxer.box(path, distance);
+              // for (var i = 0; i < boxes.length; i++) {
+              //         var bounds = box[i];
+              //         // Perform search over this bounds
+              //       }
               drawBoxes(boxes);
+              findPlaces(0);
           } else {
             window.alert('Directions request failed due to ' + status);
           }
           for (var i = 0; i < boxes.length; i++) {
-  var bounds = box[i];
-  // Perform search over this bounds 
-}
+              var bounds = box[i];
+              // Perform search over this bounds 
+            }
 
         });
       };
+
+      // Draw the array of boxes as polylines on the map
+        function drawBoxes() {
+          boxpolys = new Array(boxes.length);
+          for (var i = 0; i < boxes.length; i++) {
+            console.log(i);
+            boxpolys[i] = new google.maps.Rectangle({
+              bounds: boxes[i],
+              fillOpacity: 0,
+              strokeOpacity: 1.0,
+              strokeColor: '#000000',
+              strokeWeight: 1,
+              map: map
+            });
+          }
+        }
+
+    // Clear boxes currently on the map
+    function clearBoxes() {
+      if (boxpolys != null) {
+        for (var i = 0; i < boxpolys.length; i++) {
+          boxpolys[i].setMap(null);
+        }
+      }
+      boxpolys = null;
+    }
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnNEye545alwvfBIjUlEKBP3mOjOLnGXA&callback=initMap&libraries=places"
