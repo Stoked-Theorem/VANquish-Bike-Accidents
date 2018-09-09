@@ -10576,11 +10576,17 @@ function initMap() {
 	var marker = new google.maps.Marker({position: place_lat_lng, map: map, icon: my_icon, info: containtString});
 	// Window
 	contentString = "<div>"+ my_mark +"</div>"
+    
+    var infowindow = new google.maps.InfoWindow({
+        content: this.info,
+        maxWidth: 200,
+    });
 	
 	marker.addListener('click', function() {
-		var infowindow = new google.maps.InfoWindow({
-		  content: this.info
-		});
+        var infowindow = new google.maps.InfoWindow({
+          content: this.info,
+          maxWidth: 200
+        });
 
 		infowindow.open(map, this);
 	});
