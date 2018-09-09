@@ -171,6 +171,7 @@
       var gmarkers = [];
       var boxes = null;
       var map;
+      var dr = [];
       function initMap() {
          map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
@@ -283,9 +284,12 @@
         if (!this.originPlaceId || !this.destinationPlaceId) {
           return;
         }
-        var me = this;
-        clearBoxes();
-
+  
+        
+        for (var i = 0; i < dr.length; i++) {
+        dr[i].setMap(null);
+        }
+        dr = [];
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
           destination: {'placeId': this.destinationPlaceId},
@@ -294,8 +298,9 @@
 
         }, function(response, status) {
           if (status === 'OK') {
+             
              for (var i = 0; i < response.routes.length; i++) {
-              new google.maps.DirectionsRenderer({
+               dr[i] = new google.maps.DirectionsRenderer({
                     map: map,
                     directions: response,
                     routeIndex: i
