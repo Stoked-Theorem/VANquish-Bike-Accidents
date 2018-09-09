@@ -10542,41 +10542,63 @@
 function initMap() {
 
   // Custom marks
-	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-	var icons = {
-	parking: {
-		icon: iconBase + 'parking_lot_maps.png'
-	},
-	library: {
-		icon: iconBase + 'library_maps.png'
-	},
-	info: {
-		icon: iconBase + 'info-i_maps.png'
-	}
-	};
+  var iconBase = 'markers/blue_MarkerA.png';
+  var icons = {
+      parking: {
+          icon: 'markers/yellow_MarkerM.png'
+      },
+      library: {
+          icon: 'markers/orange_MarkerS.png'
+      },
+      info: {
+          icon: 'markers/darkgreen_MarkerD.png'
+      }
+  };
 
   var map = new google.maps.Map(
       document.getElementById('map'), {zoom: 13, center: {lat: 49.249660, lng: -123.119340}});
 
-  
+
   for(i=0; i<my_marks.length; i++){
   	my_mark = my_marks[i]
     place_lat_lng = {lat: my_mark["Latitude"], lng: my_mark["Longitude"]};
 	// Choose icon
-	if(my_mark["Injury Type"]=="Minor"){
-		my_icon = icons["info"].icon
-	}else{
-		my_icon = icons["library"].icon
-	}
+    if(my_mark["Injury Type"]=="Minor"){
+        my_icon = icons["parking"].icon
+    }
+    else if(my_mark["Injury Type"]=="Severe"){
+        my_icon = icons["library"].icon
+    }
+    else{
+        my_icon = icons["info"].icon
+    }
 	containtString = "<div>"+ JSON.stringify(my_mark) + "</div>"
 	var marker = new google.maps.Marker({position: place_lat_lng, map: map, icon: my_icon, info: containtString});
 	// Window
-	contentString = "<div>"+ my_mark +"</div>"
-	
+	var contentString = '<div>' +
+        '<h2>Crash Info</h2>' +
+        '<table>' +
+        '<tr><td>Collision Date</td><td>'+ my_mark["Collision Date"] +'</td></tr>' +
+        '<tr><td>Collision Time Range</td><td>'+ my_mark["Collision Time Range"] +'</td></tr>' +
+        '<tr><td>Injury Type</td><td>'+ my_mark["Injury Type"] +'</td></tr>' +
+        '<tr><td>Coordinates</td><td>'+ my_mark["Latitude"] + ', ' + my_mark["Longitude"] +'</td></tr>' +
+        '<tr><td>Closest Mobike Intersection</td><td>'+ my_mark["Closest Mobike Intersection"] +'</td></tr>' +
+        '<tr><td>Risk</td><td>'+ my_mark["Risk"] +'</td></tr>' +
+        '</table>' +
+        '</div>';
+
+
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        // maxWidth: 200,
+    });
+
 	marker.addListener('click', function() {
-		var infowindow = new google.maps.InfoWindow({
-		  content: this.info
-		});
+        // var infowindow = new google.maps.InfoWindow({
+        //   content: this.info,
+        //   maxWidth: 200
+        // });
 
 		infowindow.open(map, this);
 	});
