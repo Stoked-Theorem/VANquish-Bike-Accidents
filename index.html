@@ -126,16 +126,16 @@
         placeholder="Enter a destination location">
 
     <div id="mode-selector" class="controls">
-      <input type="radio" name="type" id="changemode-walking" checked="checked">
+      <!-- <input type="radio" name="type" id="changemode-walking" checked="checked">
       <label for="changemode-walking">Walking</label>
 
       <input type="radio" name="type" id="changemode-transit">
       <label for="changemode-transit">Transit</label>
 
       <input type="radio" name="type" id="changemode-driving">
-      <label for="changemode-driving">Driving</label>
+      <label for="changemode-driving">Driving</label> -->
 
-      <input type="radio" name="type" id="changemode-bicycling">
+      <input type="radio" name="type" id="changemode-bicycling" checked="checked">
       <label for="changemode-bicycling">Cycling</label>
     </div>
     </div>
@@ -162,15 +162,10 @@
       //   document.getElementById('start').addEventListener('change', onChangeHandler);
       //   document.getElementById('end').addEventListener('change', onChangeHandler);
       // }
-      var numRoutes = 3; // Use this to choose how many routes we want to show.
-      var boxpolys = null;
-      var directions = null;
-      var routeBoxer = null;
-      var distance = null; // km
-      var service = null;
-      var gmarkers = [];
-      var boxes = null;
+      // var gmarkers = [];
+      var dr = [];
       var map;
+      var prevLength;
       function initMap() {
          map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
@@ -235,9 +230,9 @@
         var destinationAutocomplete = new google.maps.places.Autocomplete(
             destinationInput, {placeIdOnly: true});
 
-        this.setupClickListener('changemode-walking', 'WALKING');
-        this.setupClickListener('changemode-transit', 'TRANSIT');
-        this.setupClickListener('changemode-driving', 'DRIVING');
+        // this.setupClickListener('changemode-walking', 'WALKING');
+        // this.setupClickListener('changemode-transit', 'TRANSIT');
+        // this.setupClickListener('changemode-driving', 'DRIVING');
         this.setupClickListener('changemode-bicycling', 'BICYCLING');
 
         this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
@@ -251,12 +246,12 @@
       // Sets a listener on a radio button to change the filter type on Places
       // Autocomplete.
       AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
-        var radioButton = document.getElementById(id);
-        var me = this;
-        radioButton.addEventListener('click', function() {
-          me.travelMode = mode;
-          me.route();
-        });
+          var radioButton = document.getElementById(id);
+          var me = this;
+          radioButton.addEventListener('click', function() {
+            me.travelMode = mode;
+            me.route();
+          });
       };
 
       AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
@@ -291,13 +286,21 @@
 
         }, function(response, status) {
           if (status === 'OK') {
+             for (var k = 0; k < dr.length; k++) {
+                 dr[k].setMap(null);
+             }
              for (var i = 0; i < response.routes.length; i++) {
-              new google.maps.DirectionsRenderer({
+                 dr[i] = new google.maps.DirectionsRenderer({
                     map: map,
                     directions: response,
                     routeIndex: i
                 });
              }
+             // if (i < prevLength - 1) {
+             //     for (var j = i + 1; j < prevLength ;j++) {
+             //         dr[j] = null;
+             //     }
+             // }
              // var paths[];
              // var polylines[];
              // for (int i = 0; i < response.routes.length && i < 3; i++) {
