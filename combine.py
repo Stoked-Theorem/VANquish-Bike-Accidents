@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import progressbar as pb
 import time
+from math import sin, cos, sqrt, atan2, radians
 
 def read(filename):
     df = pd.read_csv(filename)
@@ -88,16 +89,84 @@ def cat_to_dummy(input_data, all_cat, missingValue):
         df_target.loc[j, target_col_cat] = '1'
     return df_target
 
+def map_dis(mobike, accidents):
+    threshold = 1500
+
+    num_acc = list(accidents.index)
+    num_mobike = list(mobike.index)
+
+    for each_acc in num_acc:
+        lat_acc = accidents.loc[each_acc, 'Latitude']
+        long_acc = accidents.loc[each_acc, 'Longitude']
+        dist = 0
+        for each_mo in num_mobike:
+            lat_mo = mobike.loc[each_mo, 'Latitude']
+            long_mo = mobike.loc[each_mo, 'Longitude']
+            # create new field MoIntersectionLat,MoIntersectionLong,MoIntersection
+            val = cal_dist(lat_acc, long_acc, lat_mo, long_mo)
+            print(val)
+
+            if val < threshold:
+                print("Found .. < threshold")
+                if accidents.loc[each_acc, 'MoIntersectionLat'] == 0:
+                    accidents.loc[each_acc, 'MoIntersectionLat']= lat_mo
+                    accidents.loc[each_acc, 'MoIntersectionLong']= long_mo
+                    accidents.loc[each_acc, 'MoIntersection'] = mobike.loc[each_mo, 'Row Labels']
+                    print(accidents)
+                    dist = val
+                else:
+                    if val < dist:
+                        accidents.loc[each_acc, 'MoIntersectionLat'] = lat_mo
+                        accidents.loc[each_acc, 'MoIntersectionLong'] = long_mo
+                        accidents.loc[each_acc, 'MoIntersection'] = mobike.loc[each_mo, 'Row Labels']
+        # print("shortest: ")
+        # print(val)
+
+    accidents.to_csv('/Users/Amelia/Desktop/mapped.csv')
+
+
+
+
+
+
+
+def cal_dist(lat_acc, long_acc, lat_mo, long_mo):
+    R = 6373.0
+    lat_acc = radians(lat_acc)
+    long_acc = radians(long_acc)
+    lat_mo = radians(lat_mo)
+    long_mo = radians(long_mo)
+
+    dlon = long_mo - long_acc
+    dlat = lat_mo - lat_acc
+
+    a = sin(dlat / 2) ** 2 + cos(lat_acc) * cos(lat_mo) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+
+    #print("Result:", distance*1000)
+
+    return distance*1000
+
+
+
+
+
+
 def main():
     #combine()
     #read('/Users/Amelia/Desktop/CD.csv')
     #df1 = pd.read_csv('/Users/Amelia/Desktop/final.csv')
     #edit(df1)
-    df1 = pd.read_csv('/Users/Amelia/Desktop/MOBIKE.csv')
-    all_rfv = df1[['Departure_Station', 'Return_Station']]
-    all_rfv = all_rfv.reset_index(drop=True)
-    df2 = cat_to_dummy(all_rfv, 'auto', -9)
-    df2.to_csv('/Users/Amelia/Desktop/_muti.csv')
+    # df1 = pd.read_csv('/Users/Amelia/Desktop/MOBIKE.csv')
+    # all_rfv = df1[['Departure_Station', 'Return_Station']]
+    # all_rfv = all_rfv.reset_index(drop=True)
+    # df2 = cat_to_dummy(all_rfv, 'auto', -9)
+    # df2.to_csv('/Users/Amelia/Desktop/_muti.csv')
+    mobike = pd.read_csv('/Users/Amelia/Desktop/bike_traffic_flow.csv')
+    accidents = pd.read_csv('/Users/Amelia/Desktop/final_cycle_only_5_years.csv')
+    map_dis(mobike,accidents)
 
 
 if __name__ == '__main__':
