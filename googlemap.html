@@ -10558,7 +10558,7 @@ function initMap() {
   var map = new google.maps.Map(
       document.getElementById('map'), {zoom: 13, center: {lat: 49.249660, lng: -123.119340}});
 
-  
+
   for(i=0; i<my_marks.length; i++){
   	my_mark = my_marks[i]
     place_lat_lng = {lat: my_mark["Latitude"], lng: my_mark["Longitude"]};
@@ -10588,12 +10588,12 @@ function initMap() {
         '</div>';
 
 
-    
+
     var infowindow = new google.maps.InfoWindow({
         content: contentString,
         // maxWidth: 200,
     });
-	
+
 	marker.addListener('click', function() {
         // var infowindow = new google.maps.InfoWindow({
         //   content: this.info,
