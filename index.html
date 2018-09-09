@@ -126,7 +126,7 @@
         placeholder="Enter a destination location">
 
     <div id="mode-selector" class="controls">
-      <input type="radio" name="type" id="changemode-walking" checked="checked">
+      <input type="radio" name="type" id="changemode-walking">
       <label for="changemode-walking">Walking</label>
 
       <input type="radio" name="type" id="changemode-transit">
@@ -135,17 +135,16 @@
       <input type="radio" name="type" id="changemode-driving">
       <label for="changemode-driving">Driving</label>
 
-      <input type="radio" name="type" id="changemode-bicycling">
+      <input type="radio" name="type" id="changemode-bicycling" checked="checked">
       <label for="changemode-bicycling">Cycling</label>
     </div>
     </div>
-  
+
 
     <div id="map"></div>
     </div>
-    <script type="text/javascript" src="RouteBoxer.js"></script>
     <script>
-      // function initMap() {
+      // function initMap() {                                  // TODO: Remove
       //   var directionsService = new google.maps.DirectionsService;
       //   var directionsDisplay = new google.maps.DirectionsRenderer;
       //   var map = new google.maps.Map(document.getElementById('map'), {
@@ -163,22 +162,17 @@
       //   document.getElementById('start').addEventListener('change', onChangeHandler);
       //   document.getElementById('end').addEventListener('change', onChangeHandler);
       // }
-      var boxpolys = null;
-      var directions = null;
-      var routeBoxer = null;
-      var distance = null; // km
-      var service = null;
-      var gmarkers = [];
-      var boxes = null;
+      // var gmarkers = [];
+      var dr = [];
       var map;
+      var prevLength;
       function initMap() {
          map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
           zoom: 13,
           center: {lat: 49.249660, lng: -123.119340}
         });
-              infoWindow = new google.maps.InfoWindow;
-              routeBoxer = new RouteBoxer();
+        infoWindow = new google.maps.InfoWindow;
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -204,7 +198,7 @@
       }
 
 
-      // function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      // function calculateAndDisplayRoute(directionsService, directionsDisplay) {    // TODO: Remove
       //   directionsService.route({
       //     origin: document.getElementById('start').value,
       //     destination: document.getElementById('end').value,
@@ -228,7 +222,7 @@
         var destinationInput = document.getElementById('destination-input');
         var modeSelector = document.getElementById('mode-selector');
         this.directionsService = new google.maps.DirectionsService();
-        // this.directionsDisplay = new google.maps.DirectionsRenderer();
+        // this.directionsDisplay = new google.maps.DirectionsRenderer();    // TODO: Remove
         // this.directionsDisplay.setMap(map);
 
         var originAutocomplete = new google.maps.places.Autocomplete(
@@ -236,7 +230,7 @@
         var destinationAutocomplete = new google.maps.places.Autocomplete(
             destinationInput, {placeIdOnly: true});
 
-        this.setupClickListener('changemode-walking', 'WALKING');
+        this.setupClickListener('changemode-walking', 'WALKING');   // TODO: Remove
         this.setupClickListener('changemode-transit', 'TRANSIT');
         this.setupClickListener('changemode-driving', 'DRIVING');
         this.setupClickListener('changemode-bicycling', 'BICYCLING');
@@ -252,12 +246,12 @@
       // Sets a listener on a radio button to change the filter type on Places
       // Autocomplete.
       AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
-        var radioButton = document.getElementById(id);
-        var me = this;
-        radioButton.addEventListener('click', function() {
-          me.travelMode = mode;
-          me.route();
-        });
+          var radioButton = document.getElementById(id);
+          var me = this;
+          radioButton.addEventListener('click', function() {
+            me.travelMode = mode;
+            me.route();
+          });
       };
 
       AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
@@ -283,8 +277,6 @@
         if (!this.originPlaceId || !this.destinationPlaceId) {
           return;
         }
-        var me = this;
-        clearBoxes();
 
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
@@ -294,40 +286,54 @@
 
         }, function(response, status) {
           if (status === 'OK') {
+             for (var k = 0; k < dr.length; k++) {
+                 dr[k].setMap(null);
+             }
              for (var i = 0; i < response.routes.length; i++) {
-              new google.maps.DirectionsRenderer({
+                 dr[i] = new google.maps.DirectionsRenderer({
                     map: map,
                     directions: response,
                     routeIndex: i
                 });
              }
 
-              
-      
-         
+            // TODO: Construct the polylines for each route
+             // var paths[];
+             // var polylines[];
+             // for (int i = 0; i < response.routes.length && i < 3; i++) {
+             //     new google.maps.DirectionsRenderer({
+             //         map: map,
+             //         directions: response,
+             //         routeIndex: i
+             //     });
+             //     // paths[i] = result.routes[i].overview_path;
+             //     // polyline[i] = new google.maps.Polyline({
+             //     //   path: paths[i]
+             //     // });
+             // }
+             // // var path = result.routes[0].overview_path;
+
+
+
           } else {
             window.alert('Directions request failed due to ' + status);
           }
-        
-
+        // TODO: get a list of markers with location fields.
+        // TODO: Then use this loop to detect and do something if a marker is near the route
+        // for (int i = 0; i < 3; i++) {
+        //     var float1 = 49.257947; // marker[0].lat
+        //     var float2 = -123.190432; // marker[0].lng
+        //     // console.log(google.maps.geometry.poly.containsLocation(new google.maps.LatLng(float1, float2), bounds));
+        //     if (google.maps.geometry.poly.isLocationOnEdge(new google.maps.LatLng(float1, float2), polyline[i], 10e0)) {
+        //           //alert("Relocate!"); // TODO: DO SOMETHING
+        //       }
+        // }
         });
-        //me.directionsDisplay.setMap(map);
+        //me.directionsDisplay.setMap(map); // Remove
       };
 
-      
-
-    // Clear boxes currently on the map
-    function clearBoxes() {
-      if (boxpolys != null) {
-        for (var i = 0; i < boxpolys.length; i++) {
-          boxpolys[i].setMap(null);
-        }
-      }
-      boxpolys = null;
-    }
-
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnNEye545alwvfBIjUlEKBP3mOjOLnGXA&callback=initMap&libraries=places"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnNEye545alwvfBIjUlEKBP3mOjOLnGXA&callback=initMap&libraries=places,geometry"
     async defer></script>
   </body>
 </html>
