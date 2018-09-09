@@ -10542,18 +10542,18 @@
 function initMap() {
 
   // Custom marks
-	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-	var icons = {
-	parking: {
-		icon: iconBase + 'parking_lot_maps.png'
-	},
-	library: {
-		icon: iconBase + 'library_maps.png'
-	},
-	info: {
-		icon: iconBase + 'info-i_maps.png'
-	}
-	};
+  var iconBase = 'markers/blue_MarkerA.png';
+  var icons = {
+      parking: {
+          icon: 'markers/yellow_MarkerM.png'
+      },
+      library: {
+          icon: 'markers/orange_MarkerS.png'
+      },
+      info: {
+          icon: 'markers/darkgreen_MarkerD.png'
+      }
+  };
 
   var map = new google.maps.Map(
       document.getElementById('map'), {zoom: 13, center: {lat: 49.249660, lng: -123.119340}});
@@ -10563,11 +10563,15 @@ function initMap() {
   	my_mark = my_marks[i]
     place_lat_lng = {lat: my_mark["Latitude"], lng: my_mark["Longitude"]};
 	// Choose icon
-	if(my_mark["Injury Type"]=="Minor"){
-		my_icon = icons["info"].icon
-	}else{
-		my_icon = icons["library"].icon
-	}
+    if(my_mark["Injury Type"]=="Minor"){
+        my_icon = icons["parking"].icon
+    }
+    else if(my_mark["Injury Type"]=="Severe"){
+        my_icon = icons["library"].icon
+    }
+    else{
+        my_icon = icons["info"].icon
+    }
 	containtString = "<div>"+ JSON.stringify(my_mark) + "</div>"
 	var marker = new google.maps.Marker({position: place_lat_lng, map: map, icon: my_icon, info: containtString});
 	// Window
