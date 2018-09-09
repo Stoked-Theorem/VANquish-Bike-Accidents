@@ -1,0 +1,21 @@
+import os
+import csv
+import pandas as pd
+import numpy as np
+
+df = pd.reader(/Users/Sepand/Documents/_Development/_Hackathons/VanquishCollisions/VANquish-Bike-Accidents/Sepand/Misc-Bikeshare-usage-BikeShareData_2018.csv))
+print(df)
+# file = open('Misc-Bikeshare-usage-BikeShareData_2018.csv', 'rb')
+# reader = csv.reader(file, delimiter=',')
+# uniquePairs = {tuple((reader[1][3], reader[1][4])) : 1 }
+#
+# for row in reader:
+#     if tuple((row[3], row[4])) in uniquePairs:
+#         uniquePairs[tuple((row[3], row[4]))] += 1
+#     else:
+#         uniquePairs[tuple((row[3], row[4]))] = 1
+#
+#
+# print(len(uniquePairs))
+
+
