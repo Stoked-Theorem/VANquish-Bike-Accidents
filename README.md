@@ -5,7 +5,7 @@ Our solution for the VANquish Collisions Hackathon!
 
 ## Bike Safe!
 
-###Our Objectives:
+### Our Objectives:
 - To assess risk factors along bike routes in Metro Vancouver
 - To enable cyclists to make informed decisions about bike path
 
