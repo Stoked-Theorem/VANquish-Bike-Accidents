@@ -85,38 +85,6 @@
     </style>
   </head>
   <body>
-    <!-- <div id="floating-panel">
-    <b>Start: </b>
-    <select id="start">
-      <option value="chicago, il">Chicago</option>
-      <option value="UBC">UBC</option>
-      <option value="joplin, mo">Joplin, MO</option>
-      <option value="oklahoma city, ok">Oklahoma City</option>
-      <option value="amarillo, tx">Amarillo</option>
-      <option value="gallup, nm">Gallup, NM</option>
-      <option value="flagstaff, az">Flagstaff, AZ</option>
-      <option value="winona, az">Winona</option>
-      <option value="kingman, az">Kingman</option>
-      <option value="barstow, ca">Barstow</option>
-      <option value="san bernardino, ca">San Bernardino</option>
-      <option value="los angeles, ca">Los Angeles</option>
-    </select>
-    <b>End: </b>
-    <select id="end">
-      <option value="chicago, il">Chicago</option>
-      <option value="st louis, mo">St Louis</option>
-      <option value="joplin, mo">Joplin, MO</option>
-      <option value="oklahoma city, ok">Oklahoma City</option>
-      <option value="amarillo, tx">Amarillo</option>
-      <option value="gallup, nm">Gal</option>
-      <option value="flagstaff, az">Flagstaff, AZ</option>
-      <option value="winona, az">Winona</option>
-      <option value="kingman, az">Kingman</option>
-      <option value="SFU">SFU</option>
-      <option value="san bernardino, ca">San Bernardino</option>
-      <option value="los angeles, ca">Los Angeles</option>
-    </select>
-    </div> -->
     <div id="whole">
     <div id="floating-panel">
     <input id="origin-input" class="controls" type="text"
@@ -125,7 +93,7 @@
     <input id="destination-input" class="controls" type="text"
         placeholder="Enter a destination location">
 
-    <div id="mode-selector" class="controls">
+    <!-- <div id="mode-selector" class="controls">
       <input type="radio" name="type" id="changemode-walking">
       <label for="changemode-walking">Walking</label>
 
@@ -137,7 +105,7 @@
 
       <input type="radio" name="type" id="changemode-bicycling" checked="checked">
       <label for="changemode-bicycling">Cycling</label>
-    </div>
+    </div> -->
     </div>
 
 
@@ -10671,11 +10639,6 @@
       // function initMap() {                                  // TODO: Remove
       //   var directionsService = new google.maps.DirectionsService;
       //   var directionsDisplay = new google.maps.DirectionsRenderer;
-      //   var map = new google.maps.Map(document.getElementById('map'), {
-      //     mapTypeControl: false,
-      //     zoom: 7,
-      //     center: {lat: 49.249660, lng: -123.119340}
-      //   });
       //   directionsDisplay.setMap(map);
       //   var bikelayer = new google.maps.BicyclingLayer();
       //   bikelayer.setMap(map);
@@ -10752,17 +10715,6 @@
               containtString = my_mark;
               // var marker = new google.maps.Marker({position: place_lat_lng, map: map, icon: my_icon, info: containtString});
               // Window
-              // var contentString = '<div>' +
-              //                   '<h2>Crash Info</h2>' +
-              //                   '<table>' +
-              //                   '<tr><td>Collision Date</td><td>'+ my_mark[cd] +'</td></tr>' +
-              //                   '<tr><td>Collision Time Range</td><td>'+ my_mark[ctr] +'</td></tr>' +
-              //                   '<tr><td>Injury Type</td><td>'+ my_mark[it] +'</td></tr>' +
-              //                   '<tr><td>Coordinates</td><td>'+ my_mark[latitude] + ', ' + my_mark[longitude] +'</td></tr>' +
-              //                   '<tr><td>Closest Mobike Intersection</td><td>'+ my_mark[cmi] +'</td></tr>' +
-              //                   '<tr><td>Risk</td><td>'+ my_mark[risk] +'</td></tr>' +
-              //                   '</table>' +
-              //                   '</div>';
 
             // var infowindow = new google.maps.InfoWindow({
             //     content: contentString,
@@ -10834,9 +10786,9 @@
         var destinationAutocomplete = new google.maps.places.Autocomplete(
             destinationInput, {placeIdOnly: true});
 
-        this.setupClickListener('changemode-walking', 'WALKING');   // TODO: Remove
-        this.setupClickListener('changemode-transit', 'TRANSIT');
-        this.setupClickListener('changemode-driving', 'DRIVING');
+        // this.setupClickListener('changemode-walking', 'WALKING');   // TODO: Remove
+        // this.setupClickListener('changemode-transit', 'TRANSIT');
+        // this.setupClickListener('changemode-driving', 'DRIVING');
         this.setupClickListener('changemode-bicycling', 'BICYCLING');
 
         this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
